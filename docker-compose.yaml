@@ -1,0 +1,74 @@
+version: '3'
+services:
+
+  lair:
+    hostname: lair
+    container_name: lair_lair
+    image: warhorse/docker-lair-app:latest
+    environment:
+      LAIR_PASSWORD: "password"
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=11014"
+      - "traefik.backend=lair"
+      - "traefik.frontend.rule=Host:lair.localhost"
+
+  lairapi:
+    hostname: lairapi
+    container_name: lair_api
+    image: warhorse/docker-lair-api:latest
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=11015"
+      - "traefik.backend=lairapi"
+      - "traefik.frontend.rule=Host:lair.localhost"
+      - "traefik.frontend.rule=Path:/api"
+
+  lairdb:
+    hostname: lairdb
+    container_name: lair_db
+    tty: true
+    stdin_open: true
+    image: mongo
+    
+    entrypoint: /usr/bin/mongod --dbpath=/data/db --replSet rs0 --logpath /var/log/mongodb.log --logappend
+    volumes:
+      - $HOME/.lair/mongodb/data/db:/data/db
+
+  traefik:
+      hostname: traefik
+      container_name: traefik
+      image: traefik:1.3.5
+      # command: --logLevel=DEBUG
+      ports:
+        - "80:80"
+        - "443:443"
+        - "127.0.0.1:8080:8080"
+      restart: always
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+        - $PWD/traefik.toml:/etc/traefik/traefik.toml
+      networks:
+        - default
+      cap_drop:
+        - all
+      cap_add:
+        - net_bind_service
+
+  ngrok:
+      hostname: ngrok
+      container_name: lair_ngrok
+      image: wernight/ngrok
+      restart: always
+      labels:
+        - "traefik.enable=true"
+        - "traefik.port=4040"
+        - "traefik.backend=ngrok"
+        - "traefik.frontend.rule=Host:ngrok.localhost"
+      entrypoint: ngrok http traefik:80 -host-header=lair.localhost
+      links:
+        - traefik
+      networks:
+        - default
