@@ -23,8 +23,7 @@ services:
       - "traefik.enable=true"
       - "traefik.port=11015"
       - "traefik.backend=lairapi"
-      - "traefik.frontend.rule=Host:lair.localhost"
-      - "traefik.frontend.rule=Path:/api"
+      - "traefik.frontend.rule=Host:lair.localhost;PathPrefix:/api"
     volumes:
       - $PWD/plugins:/plugins
 
@@ -38,7 +37,7 @@ services:
     entrypoint: /usr/bin/mongod --bind_ip_all --dbpath=/data/db --replSet rs0 --logpath /var/log/mongodb.log --logappend
     volumes:
       - $HOME/.lair/mongodb/data/db:/data/db
-      - $HOME/.lair/mongodb/var/log:/var/log
+      #- $HOME/.lair/mongodb/var/log:/var/log
 
   traefik:
       hostname: traefik
@@ -48,7 +47,6 @@ services:
       ports:
         - "80:80"
         - "443:443"
-        - "127.0.0.1:8080:8080"
       restart: always
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock
@@ -59,6 +57,11 @@ services:
         - all
       cap_add:
         - net_bind_service
+      labels:
+        - "traefik.enable=true"
+        - "traefik.port=8080"
+        - "traefik.backend=traefik"
+        - "traefik.frontend.rule=Host:traefik.localhost"
 
   ngrok:
       hostname: ngrok

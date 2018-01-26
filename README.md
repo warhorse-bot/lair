@@ -8,12 +8,18 @@ This was inspired and built off the initial work done by b00stfr3ak here: https:
 
 ## Installation
 
-First make sure you have docker installed. Here are OS X Beta and Linux instructions.
+First make sure you have docker installed. Here are OS X and Linux instructions.
 
-To install docker-compose in Linux (in case you have problem with version 1.5.2 of the repos) use the following guide. You may also need to create a symbolic link
-```
-$ ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-```
+### OSX
+
+`brew install docker`
+
+OR - [Here](https://docs.docker.com/docker-for-mac/install/#download-docker-for-mac)
+
+### Linux
+
+[Here](https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/)
+
 
 then use the following commands to get this repo:
 

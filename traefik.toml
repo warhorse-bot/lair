@@ -15,20 +15,8 @@ address = ":80"
 # entryPoint = "https"
 
 # https is the default
-[entryPoints.https]
-address = ":443"
-
-[entryPoints.https.tls]
-
-# Enable ACME (Let's Encrypt): automatic SSL
-[acme]
-# caServer = "https://acme-staging.api.letsencrypt.org/directory"
-email = "example@email.com"
-storage = "acme.json" # or "traefik/acme/account" if using KV store
-entryPoint = "https"
-onDemand = false
-OnHostRule = true
-
+#[entryPoints.https]
+#address = ":443"
 
 [docker]
 endpoint = "unix:///var/run/docker.sock"
