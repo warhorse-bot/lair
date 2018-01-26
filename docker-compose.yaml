@@ -25,6 +25,8 @@ services:
       - "traefik.backend=lairapi"
       - "traefik.frontend.rule=Host:lair.localhost"
       - "traefik.frontend.rule=Path:/api"
+    volumes:
+      - $PWD/plugins:/plugins
 
   lairdb:
     hostname: lairdb
@@ -33,9 +35,10 @@ services:
     stdin_open: true
     image: mongo
     
-    entrypoint: /usr/bin/mongod --dbpath=/data/db --replSet rs0 --logpath /var/log/mongodb.log --logappend
+    entrypoint: /usr/bin/mongod --bind_ip_all --dbpath=/data/db --replSet rs0 --logpath /var/log/mongodb.log --logappend
     volumes:
       - $HOME/.lair/mongodb/data/db:/data/db
+      - $HOME/.lair/mongodb/var/log:/var/log
 
   traefik:
       hostname: traefik
