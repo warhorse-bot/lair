@@ -33,7 +33,7 @@ services:
     tty: true
     stdin_open: true
     image: mongo
-    
+    restart: always
     entrypoint: /usr/bin/mongod --bind_ip_all --dbpath=/data/db --replSet rs0 --logpath /var/log/mongodb.log --logappend
     volumes:
       - $HOME/.lair/mongodb/data/db:/data/db
