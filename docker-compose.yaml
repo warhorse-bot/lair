@@ -32,7 +32,7 @@ services:
     container_name: lair_db
     tty: true
     stdin_open: true
-    image: mongo
+    image: mongo:3.6.1
     restart: always
     entrypoint: /usr/bin/mongod --bind_ip_all --dbpath=/data/db --replSet rs0 --logpath /var/log/mongodb.log --logappend
     volumes:
