@@ -26,6 +26,7 @@ services:
       - "traefik.frontend.rule=Host:lair.localhost;PathPrefix:/api"
     volumes:
       - $PWD/plugins:/plugins
+      - $HOME/.lair/files:/files
 
   lairdb:
     hostname: lairdb
