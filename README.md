@@ -2,7 +2,8 @@
 
 This is a dockerized version of the Lair Framework. This version is a follow on from https://github.com/ryhanson/lair-docker and has been designed for a Docker-Compose deployment. There have been a lot a changes to how this compose works from lair-docker. The biggest change is everything is version locked and all docker images are part of WarHorse. You will not need to build images locally this is also what breaks things. What this means is that a year from now this Docker-Compose should still work as we are not useing upstream docker images and relaying on building code. Lastly this image uses Traefik which is an amazing load blancer. This should allow for lets encrypt certs among ALOT of other things.
 
-Ngrok is SUPPORTED. Even easyter then ever to get a public URL.
+Ngrok is SUPPORTED. It's even easyer then ever to get a public URL.
+
 
 This was inspired and built off the initial work done by b00stfr3ak here: https://github.com/b00stfr3ak/dockerfiles/tree/master/lair; && ryhanson https://github.com/ryhanson/
 
@@ -82,11 +83,14 @@ $ docker-compose stop
 
 ## Ngrok
 
-Ngrok is supported out of box. Ngrok is also enabled by default. You can get your public Ngrok URL by visting the following site.
+Ngrok is supported out of box. Ngrok is also enabled by default. To use Ngrok you will need to add your authtoken. You can get one for FREE by visting [Ngrok](https://dashboard.ngrok.com/get-started). You can get your public Ngrok URL by visting the following site. 
 
 ```
-http://ngrok.localhost
+https://ngrok.localhost
 ```
+
+Ngrok is setup to use TCP you so you will need to change the URL to have https://
+
 
 If you do not need OR want ngrok you can easly disable this by commenting out these lines in the docker-compose.yaml
 
