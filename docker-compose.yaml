@@ -39,7 +39,7 @@ services:
     volumes:
       - $HOME/.lair/mongodb/data/db:/data/db
       #- $HOME/.lair/mongodb/var/log:/var/log
-
+      #- $HOME/.lair/mongodb/backup:/backup
   traefik:
       hostname: traefik
       container_name: traefik
