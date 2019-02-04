@@ -64,18 +64,18 @@ services:
         - "traefik.backend=traefik"
         - "traefik.frontend.rule=Host:traefik.localhost"
 
-  ngrok:
-      hostname: ngrok
-      container_name: lair_ngrok
-      image: wernight/ngrok
-      restart: always
-      labels:
-        - "traefik.enable=true"
-        - "traefik.port=4040"
-        - "traefik.backend=ngrok"
-        - "traefik.frontend.rule=Host:ngrok.localhost"
-      entrypoint: ngrok tcp traefik:443 --authtoken YOUR_AUTH_TOKEN
-      links:
-        - traefik
-      networks:
-        - default
+#  ngrok:
+#      hostname: ngrok
+#      container_name: lair_ngrok
+#      image: wernight/ngrok
+#      restart: always
+#      labels:
+#        - "traefik.enable=true"
+#        - "traefik.port=4040"
+#        - "traefik.backend=ngrok"
+#        - "traefik.frontend.rule=Host:ngrok.localhost"
+#      entrypoint: ngrok tcp traefik:443 --authtoken YOUR_AUTH_TOKEN
+#      links:
+#        - traefik
+#      networks:
+#        - default
