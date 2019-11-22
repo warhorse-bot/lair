@@ -43,7 +43,7 @@ services:
   traefik:
       hostname: traefik
       container_name: traefik
-      image: traefik:latest
+      image: traefik:1.7
       # command: --logLevel=DEBUG
       ports:
         - "80:80"
