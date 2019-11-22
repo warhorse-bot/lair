@@ -4,7 +4,7 @@ services:
   lair:
     hostname: lair
     container_name: lair_lair
-    image: warhorse/docker-lair-app:latest
+    image: warhorse/lair-app:latest
     environment:
       LAIR_PASSWORD: "password"
     restart: always
@@ -17,7 +17,7 @@ services:
   lairapi:
     hostname: lairapi
     container_name: lair_api
-    image: warhorse/docker-lair-api:latest
+    image: warhorse/lair-api:latest
     restart: always
     labels:
       - "traefik.enable=true"
