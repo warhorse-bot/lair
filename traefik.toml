@@ -1,26 +1,28 @@
-# defaultEntryPoints must be at the top because it should not be in any table below
-defaultEntryPoints = ["http", "https"]
+[log]
+  level = "DEBUG"
+  filePath = "/etc/traefik/log/traefik.log"
 
-[web]
-# Port for the status page
-address = ":8080"
+[accessLog]
+  filePath = "/etc/traefik/log/access.log"
+  bufferingSize = 100
+
+[api]
+  dashboard = true
+  debug = true
+  insecure = true
 
 # Entrypoints, http and https
 [entryPoints]
+  [entryPoints.web]
+    address = ":80"
+      [entryPoints.web.http]
+        [entryPoints.web.http.redirections]
+          [entryPoints.web.http.redirections.entryPoint]
+            to = "websecure"
+            scheme = "https"
+  [entryPoints.websecure]
+    address = ":443"
 
-# http should be redirected to https
-[entryPoints.http]
-address = ":80"
-[entryPoints.http.redirect]
-entryPoint = "https"
-
-# https is the default
-[entryPoints.https]
-address = ":443"
-[entryPoints.https.tls]
-
-[docker]
-endpoint = "unix:///var/run/docker.sock"
-domain = "lair.localhost"
-watch = true
-exposedbydefault = false
+[providers.docker]
+    exposedByDefault = false
+    endpoint = "unix:///var/run/docker.sock"

@@ -10,9 +10,9 @@ services:
     restart: always
     labels:
       - "traefik.enable=true"
-      - "traefik.port=11014"
-      - "traefik.backend=lair"
-      - "traefik.frontend.rule=Host:lair.localhost,0.tcp.ngrok.io"
+      - "traefik.http.routers.lair-lair.rule=Host(`lair.localhost`)"
+      - "traefik.http.services.lair-lair.loadbalancer.server.port=11014"
+      - "traefik.http.routers.lair-lair.tls=true"
 
   lairapi:
     hostname: lairapi
@@ -21,9 +21,9 @@ services:
     restart: always
     labels:
       - "traefik.enable=true"
-      - "traefik.port=11015"
-      - "traefik.backend=lairapi"
-      - "traefik.frontend.rule=Host:lair.localhost,0.tcp.ngrok.io;PathPrefix:/api"
+      - "traefik.http.routers.lair_api.rule=Host(`lair.localhost`) && PathPrefix(`/api`)"
+      - "traefik.http.services.lair_api.loadbalancer.server.port=11015"
+      - "traefik.http.routers.lair_api.tls=true"
     volumes:
       - $PWD/plugins:/plugins
       - $HOME/.lair/files:/files
@@ -38,19 +38,19 @@ services:
     entrypoint: /usr/bin/mongod --bind_ip_all --dbpath=/data/db --replSet rs0 --logpath /var/log/mongodb.log --logappend
     volumes:
       - $HOME/.lair/mongodb/data/db:/data/db
-      #- $HOME/.lair/mongodb/var/log:/var/log
-      #- $HOME/.lair/mongodb/backup:/backup
+      - $HOME/.lair/mongodb/var/log:/var/log
+
   traefik:
       hostname: traefik
       container_name: traefik
-      image: traefik:1.7
-      # command: --logLevel=DEBUG
+      image: traefik:v2.2
       ports:
         - "80:80"
         - "443:443"
       restart: always
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock
+        - $HOME/.lair/traefik/log:/etc/traefik/log
         - $PWD/traefik.toml:/etc/traefik/traefik.toml
       networks:
         - default
@@ -60,22 +60,25 @@ services:
         - net_bind_service
       labels:
         - "traefik.enable=true"
-        - "traefik.port=8080"
-        - "traefik.backend=traefik"
-        - "traefik.frontend.rule=Host:traefik.localhost"
+        - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+        - "traefik.http.routers.traefik.service=api@internal"
+        - "traefik.http.routers.traefik.entrypoints=websecure"
+        - "traefik.http.routers.traefik.middlewares=authtraefik"
+        - "traefik.http.middlewares.authtraefik.basicauth.users=user:$$apr1$$q8eZFHjF$$Fvmkk//V6Btlaf2i/ju5n/"
 
-#   ngrok:
-#       hostname: ngrok
-#       container_name: lair_ngrok
-#       image: wernight/ngrok
-#       restart: always
-#       labels:
-#         - "traefik.enable=true"
-#         - "traefik.port=4040"
-#         - "traefik.backend=ngrok"
-#         - "traefik.frontend.rule=Host:ngrok.localhost"
-#       entrypoint: ngrok tcp traefik:443 --authtoken YOUR_AUTH_TOKEN
-#       links:
-#         - traefik
-#       networks:
-#         - default
+
+  # ngrok:
+      # hostname: ngrok
+      # container_name: lair_ngrok
+      #image: wernight/ngrok
+      #restart: always
+      #labels:
+        #- "traefik.enable=true"
+        #- "traefik.port=4040"
+        #- "traefik.backend=ngrok"
+        #- "traefik.frontend.rule=Host:ngrok.localhost"
+      #entrypoint: ngrok tcp traefik:443 --authtoken YOUR_AUTH_TOKEN
+      #links:
+        #- traefik
+      #networks:
+        #- default
