@@ -10,8 +10,9 @@ services:
     restart: always
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.lair-lair.rule=Host(`lair.localhost`)"
+      - "traefik.http.routers.lair-lair.rule=Host(`lair.localhost`) || Host(`127.0.0.1`) || Host(`0.tcp.ngrok.io`)"
       - "traefik.http.services.lair-lair.loadbalancer.server.port=11014"
+      - "traefik.http.routers.lair-lair.service=lair-lair"      
       - "traefik.http.routers.lair-lair.tls=true"
 
   lairapi:
@@ -21,8 +22,8 @@ services:
     restart: always
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.lair_api.rule=Host(`lair.localhost`) && PathPrefix(`/api`)"
-      - "traefik.http.services.lair_api.loadbalancer.server.port=11015"
+      - "traefik.http.routers.lair_api.rule=Host(`lair.localhost`) && PathPrefix(`/api`) || (Host(`127.0.0.1`) && PathPrefix(`/api`)) || (Host(`0.tcp.ngrok.io`) && PathPrefix(`/api`))"      - "traefik.http.services.lair_api.loadbalancer.server.port=11015"
+      - "traefik.http.routers.lair-api.service=lair-api
       - "traefik.http.routers.lair_api.tls=true"
     volumes:
       - $PWD/plugins:/plugins
@@ -60,7 +61,7 @@ services:
         - net_bind_service
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+        - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`) || Host(`127.0.0.1`) && PathPrefix(`/traefik`)"
         - "traefik.http.routers.traefik.service=api@internal"
         - "traefik.http.routers.traefik.entrypoints=websecure"
         - "traefik.http.routers.traefik.middlewares=authtraefik"
@@ -74,9 +75,10 @@ services:
       #restart: always
       #labels:
         #- "traefik.enable=true"
-        #- "traefik.port=4040"
-        #- "traefik.backend=ngrok"
-        #- "traefik.frontend.rule=Host:ngrok.localhost"
+        #- "traefik.http.routers.ngrok.rule=Host(`ngrok.localhost`) || (Host(`127.0.0.1`) && PathPrefix(`/ngrok`))"      
+        #- "traefik.http.services.ngrok.loadbalancer.server.port=4040"
+        #- "traefik.http.routers.ngrok.service=ngrok
+        #- "traefik.http.routers.ngrok.tls=true"
       #entrypoint: ngrok tcp traefik:443 --authtoken YOUR_AUTH_TOKEN
       #links:
         #- traefik
