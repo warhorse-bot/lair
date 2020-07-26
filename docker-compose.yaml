@@ -22,8 +22,9 @@ services:
     restart: always
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.lair_api.rule=Host(`lair.localhost`) && PathPrefix(`/api`) || (Host(`127.0.0.1`) && PathPrefix(`/api`)) || (Host(`0.tcp.ngrok.io`) && PathPrefix(`/api`))"      - "traefik.http.services.lair_api.loadbalancer.server.port=11015"
-      - "traefik.http.routers.lair-api.service=lair-api
+      - "traefik.http.routers.lair_api.rule=Host(`lair.localhost`) && PathPrefix(`/api`) || (Host(`127.0.0.1`) && PathPrefix(`/api`)) || (Host(`0.tcp.ngrok.io`) && PathPrefix(`/api`))"
+      - "traefik.http.services.lair_api.loadbalancer.server.port=11015"
+      - "traefik.http.routers.lair-api.service=lair-api"
       - "traefik.http.routers.lair_api.tls=true"
     volumes:
       - $PWD/plugins:/plugins
