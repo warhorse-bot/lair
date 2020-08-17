@@ -80,7 +80,7 @@ services:
         #- "traefik.http.services.ngrok.loadbalancer.server.port=4040"
         #- "traefik.http.routers.ngrok.service=ngrok
         #- "traefik.http.routers.ngrok.tls=true"
-      #entrypoint: ngrok tcp traefik:443 --authtoken YOUR_AUTH_TOKEN
+      #entrypoint: ngrok tcp traefik:443 --host-header lair.localhost --authtoken YOUR_AUTH_TOKEN
       #links:
         #- traefik
       #networks:
