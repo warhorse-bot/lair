@@ -12,6 +12,12 @@ func Update(p *lair.Project) {
 	for i, h := range p.Hosts {
 		for j, s := range h.Services {
 			service := strings.ToUpper(s.Service)
+			
+			s.Protocol = strings.ToLower(s.Protocol)
+
+			if strings.ToLower(s.Product) == "unknown" {
+				s.Product = ""
+			}
 
 			if value, ok := mappedServices[s.Port]; ok {
 				service = value
